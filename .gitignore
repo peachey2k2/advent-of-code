@@ -1,0 +1,10 @@
+# Godot 4+ specific ignores
+.godot/
+
+# vscode ignores
+.vscode/
+
+# ignore all project files, since they are not needed
+icon.svg
+icon.svg.import
+project.godot
