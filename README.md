@@ -1,6 +1,6 @@
 # AoC Godot
 
-This repo contains my [Advent of Code](https://adventofcode.com/) scripts that are written in Godot. These scripts are meant to be executed individually (with a headless editor). They also automatically fetch the input string, though they require a cookie to do so, which is supplied via environment variables.
+This repo contains my [Advent of Code](https://adventofcode.com/) scripts that are written in GDScript. These scripts are meant to be executed individually (with a headless editor). They also automatically fetch the input string, though they require a cookie to do so, which is supplied via environment variables.
 
 # Usage
 If you want to use these scripts to get free stars in AoC for some reason, you're free to do so. But first, please consider the following:
