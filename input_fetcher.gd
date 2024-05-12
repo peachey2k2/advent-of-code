@@ -5,12 +5,10 @@ var input:String # thank you spaghetti monster
 func get_input(tree:SceneTree) -> String:
 
     var regex := RegEx.new()
-    var err = regex.compile("res://(?<year>\\d+)/(?<day>\\d+)p\\d+\\.gd")
-    print(err)
+    regex.compile("res://(?<year>\\d+)/(?<day>\\d+)p\\d+\\.gd")
     var res := regex.search(tree.get_script().resource_path)
     var year := res.get_string("year").to_int()
     var day := res.get_string("day").to_int()
-    print(year," ", day)
 
     var dir := DirAccess.open("res://")
     var filename := ".cache/y%dd%d" % [year, day]
@@ -31,7 +29,7 @@ func get_input(tree:SceneTree) -> String:
     hreq.request(url, ["Cookie: session=" + OS.get_environment("AOC_COOKIE")])
     await hreq.request_completed
 
-    print(input)
+    hreq.queue_free()
 
     var file := FileAccess.open(filename, FileAccess.WRITE)
     file.store_string(input)
