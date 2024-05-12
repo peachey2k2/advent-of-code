@@ -8,3 +8,6 @@
 icon.svg
 icon.svg.import
 project.godot
+
+# cached examples
+.cache

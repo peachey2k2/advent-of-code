@@ -1,18 +1,9 @@
 extends SceneTree
 
-const URL := "http://adventofcode.com/2023/day/1/input"
 var input := ""
 
 func _init():
-    print("Getting input. This may take a couple seconds.\n")
-    var hreq := HTTPRequest.new()
-    root.add_child(hreq)
-    await hreq.ready
-    hreq.request_completed.connect(func(_result, _response_code, _headers, body):
-        input = body.get_string_from_utf8()
-    )
-    hreq.request(URL, ["Cookie: session=" + OS.get_environment("AOC_COOKIE")])
-    await hreq.request_completed
+    input = await ResourceLoader.load("res://../input_fetcher.gd").new().get_input(self)
     main()
     quit()
 
