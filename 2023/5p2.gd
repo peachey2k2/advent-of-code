@@ -6,6 +6,8 @@ var seeds:Array[Seed]
 var maps:Array[Array]
 
 # todo: this works for the example, but not the input. fix it.
+# well it kinda does, it just has some false positives at the start of the array
+# still needs a more proper fix tho
 
 class Seed:
     var s:int
@@ -55,8 +57,6 @@ class Seed:
     func _to_string():
         return str(s) + "-" + str(r)
 
-
-
 func _init():
     input = await ResourceLoader.load("res://../input_fetcher.gd").new().get_input(self)
     main()
@@ -79,13 +79,27 @@ func main():
             maps.append(new_map)
     var next := seeds
     for map in maps:
+        next = clear_duplicates(next)
         next = transform(map, next)
 
     var sorted = next.map(func(a:Seed): return a.s)
     sorted.sort()
-    # print(sorted)
-    # print(next)
+    print(sorted)
+    print(next)
     print(sorted[0])
+
+func clear_duplicates(arr:Array[Seed]) -> Array[Seed]:
+    var out:Array[Seed] = []
+    for seed_in in arr:
+        var flag := false
+        for seed_out in out:
+            if seed_in.s == seed_out.s and seed_in.r == seed_out.r:
+                flag = true
+                break
+        if not flag:
+            out.append(seed_in)
+    return out
+        
 
 func transform(map:Array, prev:Array[Seed]) -> Array[Seed]:
     var next:Array[Seed] = []
@@ -95,9 +109,17 @@ func transform(map:Array, prev:Array[Seed]) -> Array[Seed]:
             var slices := num.slice(line)
             if not slices.is_empty():
                 num.flag = true
+                var slice:Seed = slices.pop_front()
+                slice.shift(line[0]-line[1])
+
+                var flag := false
+                for num2 in next:
+                    if num2.s == num.s:
+                        flag = true
+                        break
+                if not flag: next.append(slice)
+
                 # print(num, "->", line, " ==== " ,slices)
-                slices[0].shift(line[0]-line[1])
-                next.append(slices.pop_front())
                 prev.append_array(slices)
 
     for num in prev:
