@@ -1,5 +1,7 @@
 extends SceneTree
 
+# todo: this is SLOOOOOW and doesn't work
+
 var input := ""
 
 var maze:Array[String]
@@ -42,9 +44,10 @@ func main():
     
     construct_labyrinth()
 
-    
-    for i in range(1, labyrinth.size()-1, 3):
-        for j in range(1, labyrinth[0].size()-1, 3):
+    for i in [3*start.x, 3*start.x+2]:
+        for j in [3*start.y, 3*start.y+2]:
+    # for i in range(1, labyrinth.size()-1, 3):
+    #     for j in range(1, labyrinth[0].size()-1, 3):
             if labyrinth[i][j] == 1: continue
             var vec := Vector2i(j, i)
             for loc in inside:
@@ -52,7 +55,6 @@ func main():
             for loc in outside:
                 if vec == loc: continue
             var visited:Array[Vector2i] = []
-            print(vec / 3, " ", inside.size(), " ", outside.size())
             if bfs(vec, visited):
                 for v in visited:
                     if v.x % 3 == 1 and v.y % 3 == 1:
@@ -61,6 +63,7 @@ func main():
                 for v in visited:
                     if v.x % 3 == 1 and v.y % 3 == 1:
                         outside.append(v)
+            print(vec, " ", inside.size(), " ", outside.size())
     
     print(inside.size())
 
@@ -99,14 +102,18 @@ func bfs(begin:Vector2i, visited:Array[Vector2i]) -> bool:
     while not queue.is_empty():
         var next:Vector2i = queue.pop_front()
 
-        for vec in outside:
-            if next == vec:
-                return false
+        if next.x % 3 == 1 and next.y % 3 == 1:
+            for vec in outside:
+                if next == vec:
+                    print(1)
+                    return false
 
         if next.x < 0 or next.y < 0 or next.x >= labyrinth[0].size() or next.y >= labyrinth.size():
+            print(2)
             return false
 
-        if labyrinth[next.y][next.x] == 1: continue
+        if labyrinth[next.y][next.x] == 1:
+            continue
 
         var flag := false
         for point in visited:
@@ -122,7 +129,6 @@ func bfs(begin:Vector2i, visited:Array[Vector2i]) -> bool:
         queue.append(next + Vector2i.LEFT)
         queue.append(next + Vector2i.RIGHT)
 
-    print(visited)
     return true
 
 func construct_labyrinth():
