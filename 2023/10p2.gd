@@ -4,12 +4,12 @@ extends SceneTree
 
 var input := ""
 
-var maze:Array[String]
+var maze:Array[String] = []
 var start:Vector2i 
 var direction:Vector2i
 
 var coords:Array[Vector2i] = []
-var labyrinth:Array[Array]
+var labyrinth:Array[Array] = []
 
 var inside:Array[Vector2i] = []
 var outside:Array[Vector2i] = []
@@ -28,6 +28,7 @@ func main():
             start = Vector2i(pos, maze.size()-1)
     
     maze[start.y][start.x] = get_start_pipe()
+    coords.append(start)
 
     if get_item(start + Vector2i.UP) == "7" or get_item(start + Vector2i.UP) == "F":
         direction = Vector2i.UP
@@ -38,7 +39,6 @@ func main():
     var position := start + direction
     while true:
         if position == start: break
-        # print(position, " -> ", item)
         coords.append(position)
         position = move(position)
     
@@ -46,8 +46,6 @@ func main():
 
     for i in [3*start.x, 3*start.x+2]:
         for j in [3*start.y, 3*start.y+2]:
-    # for i in range(1, labyrinth.size()-1, 3):
-    #     for j in range(1, labyrinth[0].size()-1, 3):
             if labyrinth[i][j] == 1: continue
             var vec := Vector2i(j, i)
             for loc in inside:
@@ -59,13 +57,12 @@ func main():
                 for v in visited:
                     if v.x % 3 == 1 and v.y % 3 == 1:
                         inside.append(v)
+                        print(inside.size())
+                        return
             else:
                 for v in visited:
                     if v.x % 3 == 1 and v.y % 3 == 1:
                         outside.append(v)
-            print(vec, " ", inside.size(), " ", outside.size())
-    
-    print(inside.size())
 
 func get_start_pipe() -> String:
     var connections := 0
@@ -105,11 +102,9 @@ func bfs(begin:Vector2i, visited:Array[Vector2i]) -> bool:
         if next.x % 3 == 1 and next.y % 3 == 1:
             for vec in outside:
                 if next == vec:
-                    print(1)
                     return false
 
         if next.x < 0 or next.y < 0 or next.x >= labyrinth[0].size() or next.y >= labyrinth.size():
-            print(2)
             return false
 
         if labyrinth[next.y][next.x] == 1:
@@ -122,7 +117,6 @@ func bfs(begin:Vector2i, visited:Array[Vector2i]) -> bool:
                 break
         if flag: continue
         visited.append(next)
-        # print(next, " ", visited.size())
 
         queue.append(next + Vector2i.UP)
         queue.append(next + Vector2i.DOWN)
@@ -152,17 +146,12 @@ func construct_labyrinth():
                     "|": next_block = [[0,1,0],[0,1,0],[0,1,0]]
             else:
                 next_block = [[0,0,0],[0,0,0],[0,0,0]]
-            if next_block.is_empty():
-                print(j, " ", i)
             next_row[0].append_array(next_block[0])
             next_row[1].append_array(next_block[1])
             next_row[2].append_array(next_block[2])
         labyrinth.append(next_row[0])
         labyrinth.append(next_row[1])
         labyrinth.append(next_row[2])
-
-    # for i in labyrinth:
-    #     print(i)
 
 
 func get_item(pos:Vector2i) -> String:
