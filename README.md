@@ -15,4 +15,5 @@ To run any of these scripts, use the following command
 ```bash
 AOC_COOKIE=<COOKIE> godot --headless -s <SCRIPT>
 ```
-Replace `<COOKIE>` with your cookie and `<SCRIPT>` with the script you want to run. If you're using Godot Mono, you'll also need to replace `godot` with `godot-mono`.
+Replace `<COOKIE>` with your cookie and `<SCRIPT>` with the script you want to run.
+`godot` should point to your installation of Godot, so for example if you're using Godot Mono, you might need to replace `godot` with `godot-mono`.
