@@ -1,0 +1,389 @@
+i use an intermediate language because i don't wanna spam the same characters thousands of times
+rules are the same here except i can use numbers to call commands multiple times in a row
+also anything that's not a number or a command is discarded
+
+
+
+===== step one: get the input =====
+
+>                               start with a reserved byte ~ this'll make sense later
+14000> - 14000<                 mark where we stop (this is the length of the input)
++[,>+]                          read input char by char
+                                keep in mind that we have a zero byte at the end (by default)
+
+<[                              we'll do some reformatting for easier/faster processing
+    10-                         set the newline to zero
+    <48-<48-<48-<48-<48-        turn each digit in second row from ascii to raw numbers
+    <32-<32-<32-                turn the spaces between numbers to zero
+    <48-<48-<48-<48-<48-        same thing for the first row
+    <                           go to the next newline ~ we'll stop with the zero at the start
+]
+
+
+
+===== step two: order the nums =====
+
+14> 1> [ 14< 1<                     we'll be doing bubble sort ~ it's just easier than anything else for us
+
+->                                  mark the first bit to find where we were after inner loop        
+14> [                               inner loop ~ does all the comparisons and swaps
+
+[- 5> + 1> + 6<] 6> [- 6< + 6>]     duplicate the first digits
+14>
+[- 8< + 1> + 7>] 7< [- 7> + 7<]
+2<                                  move to first copied number
+
+[->-<]                              this was the best way i found to compare numbers
+> [ <+> -[ <->                      set a flag in first space if they are equal
+-[-[-[-[-[-[-[-
+[[-] >+<]                           set a flag in third space if the first number is bigger
+]]]]]]]]]
+
+
+<[- 4<                              this gets run if they are both equal ~ so we check the second digits
+
+[- 4> + 1> + 5<] 5> [- 5< + 5>]     duplicate the second digits
+14>
+[- 9< + 1> + 8>] 8< [- 8> + 8<]
+2<
+
+[->-<]                              compare
+> [ <+> -[ <->
+-[-[-[-[-[-[-[-
+[[-] >+<]
+]]]]]]]]]
+
+
+<[- 3<                              check for third digits if necessary
+
+[- 3> + 1> + 4<] 4> [- 4< + 4>]     duplicate the third digits
+14>
+[- 10< + 1> + 9>] 9< [- 9> + 9<]
+2<
+
+[->-<]                              compare
+> [ <+> -[ <->
+-[-[-[-[-[-[-[-
+[[-] >+<]
+]]]]]]]]]
+
+
+<[- 2<                              check for forth digits if necessary
+
+[- 2> + 1> + 3<] 3> [- 3< + 3>]     duplicate the forth digits
+14>
+[- 11< + 1> + 10>] 10< [- 10> + 10<]
+2<
+
+[->-<]                              compare
+> [ <+> -[ <->
+-[-[-[-[-[-[-[-
+[[-] >+<]
+]]]]]]]]]
+
+
+<[- 1<                              check for fifth digits if necessary
+
+[- 1> + 1> + 2<] 2> [- 2< + 2>]     duplicate the fifth digits
+14>
+[- 12< + 1> + 11>] 11< [- 11> + 11<]
+2<
+
+[->-<]                              compare
+> [ -[                              IMPORTANT: no equality check here because we don't need to
+-[-[-[-[-[-[-[-                     plus we need all three spaces to be zero for the last part
+[[-] >+<]
+]]]]]]]]]
+
+
+]]]]                                leave all the condition checks ~ ptr should be at second space now
+
+
+
+>[-                                 this gets run if the left digit is bigger than the right one at any point
+2<                                  istg this whole puzzle feels like it was made for brainfuck
+
+5<  [-  5> +  5<]                   swap first digit
+14> [- 14< + 14>]
+9<  [-  9> +  9<]
+
+4<  [-  4> +  4<]                   swap second digit
+14> [- 14< + 14>]
+10< [- 10> + 10<]
+
+3<  [-  3> +  3<]                   swap third digit
+14> [- 14< + 14>]
+11< [- 11> + 11<]
+
+2<  [-  2> +  2<]                   swap forth digit
+14> [- 14< + 14>]
+12< [- 12> + 12<]
+
+1<  [-  1> +  1<]                   swap fifth digit
+14> [- 14< + 14>]
+13< [- 13> + 13<]
+
+>]
+
+
+
+2>                                  now we'll want to do the exact same thing with right side
+
+
+[- 3< + 1> + 2>] 2< [- 2> + 2<]     duplicate the first digits
+14>
+[- 16< + 1> + 15>] 15< [- 15> + 15<]
+2<                                  move to first copied number
+
+[->-<]                              compare
+> [ <+> -[ <->
+-[-[-[-[-[-[-[-
+[[-] >+<]
+]]]]]]]]]
+
+
+<[- 4>                              check for second digits if necessary
+
+[- 4< + 1> + 3>] 3< [- 3> + 3<]     duplicate the second digits
+14>
+[- 17< + 1> + 16>] 16< [- 16> + 16<]
+2<
+
+[->-<]                              compare
+> [ <+> -[ <->
+-[-[-[-[-[-[-[-
+[[-] >+<]
+]]]]]]]]]
+
+
+<[- 5>                              check for third digits if necessary
+
+[- 5< + 1> + 4>] 4< [- 4> + 4<]     duplicate the third digits
+14>
+[- 18< + 1> + 17>] 17< [- 17> + 17<]
+2<
+
+[->-<]                              compare
+> [ <+> -[ <->
+-[-[-[-[-[-[-[-
+[[-] >+<]
+]]]]]]]]]
+
+
+<[- 6>                              check for forth digits if necessary
+
+[- 6< + 1> + 5>] 5< [- 5> + 5<]     duplicate the forth digits
+14>
+[- 19< + 1> + 18>] 18< [- 18> + 18<]
+2<
+
+[->-<]                              compare
+> [ <+> -[ <->
+-[-[-[-[-[-[-[-
+[[-] >+<]
+]]]]]]]]]
+
+
+<[- 7>                              check for fifth digits if necessary
+
+[- 7< + 1> + 6>] 6< [- 6> + 6<]     duplicate the fifth digits
+14>
+[- 20< + 1> + 19>] 19< [- 19> + 19<]
+2<
+
+[->-<]                              compare
+> [ -[
+-[-[-[-[-[-[-[-
+[[-] >+<]
+]]]]]]]]]
+
+
+
+]]]]                                leave all the condition checks ~ ptr should be at second space now
+
+
+
+>[-                                 this gets run if the left digit is bigger than the right one at any point
+2<
+
+3>  [-  3< +  3>]                   swap first digit
+14> [- 14< + 14>]
+17< [- 17> + 17<]
+
+4>  [-  4< +  4>]                   swap second digit
+14> [- 14< + 14>]
+18< [- 18> + 18<]
+
+5>  [-  5< +  5>]                   swap third digit
+14> [- 14< + 14>]
+19< [- 19> + 19<]
+
+6>  [-  6< +  6>]                   swap forth digit
+14> [- 14< + 14>]
+20< [- 20> + 20<]
+
+7>  [-  7< +  7>]                   swap fifth digit
+14> [- 14< + 14>]
+21< [- 21> + 21<]
+
+>]
+
+
+14> ]                               end of inner loop
+
+<+[- <14 +]-                        get back to where we were
+
++ 28> 1> ] 1< 1400<
+
+
+
+
+===== step three: get the diff =====
+
+>1
+
+[- 8> - <8] >                       subtract first number from second
+[- 8> - <8] >
+[- 8> - <8] >
+[- 8> - <8] >
+[- 8> - <8] 4>
+
+[- 2< + > + 1> ] 2< [- 2> + 2< ]    copy left most digit
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[    check if the left most digit is positive or negative
+1<+1> [+]                           set a flag in second space if it is negative
+]]]]]]]]]]                          we also have a flag in first space for equality
+
+
+2< [- 3>                            if they are equal then we'll check the second digit
+
+[- 3< + > + 2> ] 3< [- 3> + 3< ]
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[
+1<+1> [+]
+]]]]]]]]]]
+
+
+2< [- 4>                             check the third digit
+
+[- 4< + > + 3> ] 4< [- 4> + 4< ]
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[
+1<+1> [+]
+]]]]]]]]]]
+
+
+2< [- 5>                             check the forth digit
+
+[- 5< + > + 4> ] 5< [- 5> + 5< ]
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[
+1<+1> [+]
+]]]]]]]]]]
+
+
+2< [- 6>                             check the fifth digit
+
+[- 6< + > + 5> ] 6< [- 6> + 6< ]
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[
+1<+1> [+]
+]]]]]]]]]]
+
+]]]] >
+
+
+[-                                  invert number if it is negative
+
+>> [+ < + >] < [- > + <]
+>> [+ < + >] < [- > + <]
+>> [+ < + >] < [- > + <]
+>> [+ < + >] < [- > + <]
+>> [+ < + >] < [- > + <]
+
+5< ]
+
+8>
+
+
+[                                   loop over every other pair ~ this is done like this because
+                                    there is no number to add to the first one
+
+[- 8> - <8] >                       subtract first number from second
+[- 8> - <8] >
+[- 8> - <8] >
+[- 8> - <8] >
+[- 8> - <8] 4>
+
+[- 2< + > + 1> ] 2< [- 2> + 2< ]    copy left most digit
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[    check if the left most digit is positive or negative
+1<+1> [+]                           set a flag in second space if it is negative
+]]]]]]]]]]                          we also have a flag in first space for equality
+
+
+2< [- 3>                            if they are equal then we'll check the second digit
+
+[- 3< + > + 2> ] 3< [- 3> + 3< ]
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[
+1<+1> [+]
+]]]]]]]]]]
+
+
+2< [- 4>                             check the third digit
+
+[- 4< + > + 3> ] 4< [- 4> + 4< ]
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[
+1<+1> [+]
+]]]]]]]]]]
+
+
+2< [- 5>                             check the forth digit
+
+[- 5< + > + 4> ] 5< [- 5> + 5< ]
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[
+1<+1> [+]
+]]]]]]]]]]
+
+
+2< [- 6>                             check the fifth digit
+
+[- 6< + > + 5> ] 6< [- 6> + 6< ]
+
+>
+2<+2> [- 2<-2> [-[-[-[-[-[-[-[-[
+1<+1> [+]
+]]]]]]]]]]
+
+]]]] >
+
+
+[-                                  invert number if it is negative
+
+>> [+ < + >] < [- > + <]
+>> [+ < + >] < [- > + <]
+>> [+ < + >] < [- > + <]
+>> [+ < + >] < [- > + <]
+>> [+ < + >] < [- > + <]
+
+5< ]
+
+////////////// here
+
+8>
+
+
+
+]

@@ -11,3 +11,6 @@ project.godot
 
 # cached examples
 .cache
+
+# ignore all input files
+input*.txt
