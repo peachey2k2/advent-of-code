@@ -76,7 +76,6 @@ procedure Code is
             Cur := Coords(Idx);
 
             if Cur.x <= Length and Cur.y <= Length and Cur.x >= 1 and Cur.y >= 1 then
-                -- Put_Line(Idx'Image & Coords.Length'Image & Lines(Cur.y));
                 if Lines(Cur.y)(Cur.x) = Match then
                     Coords.Append((Cur.x, Cur.y+1));
                     Coords.Append((Cur.x, Cur.y-1));
@@ -98,12 +97,9 @@ procedure Code is
         end loop;
 
         Area      := Integer(Coords.Length);
-        -- Perimeter := 4 * Area;
         Corners   := 0;
 
         for Coord of Set loop
-            -- if Set.Contains((Coord.x+1, Coord.y)) then Perimeter := Perimeter-2; end if;
-            -- if Set.Contains((Coord.x, Coord.y+1)) then Perimeter := Perimeter-2; end if;
             A := (
                 Set.Contains((Coord.x+1, Coord.y)),
                 Set.Contains((Coord.x, Coord.y+1)),
@@ -130,7 +126,6 @@ procedure Code is
             end if;
         end loop;
 
-        Put_Line(Area'Image & Corners'Image);
         return Area * Corners;
 
     end Check_Area;
@@ -151,7 +146,6 @@ begin
 
     for y in 1 .. Natural(Length) loop
         for x in 1 .. Natural(Length) loop
-            -- Put_Line("(" & x'Image & ", " & y'Image & ") -> " & Lines(y-1)(x));
             Sum := Sum + Check_Area((x, y));
         end loop; 
     end loop;
